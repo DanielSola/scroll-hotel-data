@@ -2,6 +2,26 @@
   width: 890px;
 }
 
+#chinese-new-year-image {
+  padding-top: 100px;
+  transition: opacity 0.3s linear 2s !important;
+}
+
+#dia-trabajador-image {
+  padding-top: 100px;
+  transition: opacity 0.3s linear 2s !important;
+}
+
+
+img {
+  opacity: 0;
+  transition: opacity 2s ease-in;
+}
+
+img.visible {
+  opacity: 1;
+}
+
 #graphic {
   padding-top: 60px;
 }
@@ -41,18 +61,11 @@
   position: fixed;
   top: 60px;
   z-index: 1;
-  margin-left: 0;
 }
-
 
 .axis path,
 .axis line {
   fill: none;
   stroke: #666;
   shape-rendering: crispEdges;
-}
-
-.highlight {
-  fill: #008080;
-  font-weight: bold;
 }

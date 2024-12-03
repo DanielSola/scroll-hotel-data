@@ -1,46 +1,46 @@
 var scrollVis = function () {
-  var width = 600;
+  var width = 500;
   var height = 520;
-  var margin = { top: 0, left: 20, bottom: 40, right: 10 };
+  var margin = { top: 50, left: 20, bottom: 40, right: 100 };
 
   var lastIndex = -1;
   var activeIndex = 0;
-  var svgWords = null;
-  var gWords = null;
+  var svg = null;
+  var g = null;
   var transitionTime = 1000;
+
+  var coughColorScale = d3.scaleLinear().domain([0, 1.0]).range(['#008080', 'red']);
 
   var activateFunctions = [];
   var updateFunctions = [];
 
   var chart = function (selection) {
-    selection.each(function ([wordData, hotelData]) {
-      weekData = getArrivalData(hotelData);
+    selection.each(function ([hotelData]) {
+      chinaData = getArrivalData(hotelData, 'CN');
 
-      svgWords = d3.select(this).selectAll('svg').data([hotelData]);
+      svg = d3.select(this).selectAll('svg').data([hotelData]);
+      var svgE = svg.enter().append('svg');
+      svg = svg.merge(svgE);
+      svg.attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
+      svg.append('g');
 
-      var svgE = svgWords.enter().append('svg');
-
-      svgWords = svgWords.merge(svgE);
-
-      svgWords.attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
-
-      svgWords.append('g');
-
-      gWords = svgWords.select('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      g = svg.select('g').attr('transform', 'translate(' + margin.right + ',' + margin.top + ')');
 
       setupSections();
     });
   };
 
-  function getArrivalData(data) {
+  function getArrivalData(data, desiredCountry) {
     // Aggregate data based on arrival_date_week_number
     var visits = {};
 
-    data.forEach(({ arrival_date_week_number }) => {
-      if (!visits[arrival_date_week_number]) {
-        visits[arrival_date_week_number] = 1;
-      } else {
-        visits[arrival_date_week_number] += 1;
+    data.forEach(({ arrival_date_week_number, country }) => {
+      if (country === desiredCountry) {
+        if (!visits[arrival_date_week_number]) {
+          visits[arrival_date_week_number] = 1;
+        } else {
+          visits[arrival_date_week_number] += 1;
+        }
       }
     });
 
@@ -49,63 +49,94 @@ var scrollVis = function () {
 
   var setupSections = function () {
     activateFunctions[0] = showTitle;
-    activateFunctions[1] = showFillerTitle;
-    activateFunctions[2] = showBookings;
-    activateFunctions[3] = showHistPart;
-    activateFunctions[4] = showHistAll;
-    activateFunctions[5] = showCough;
-    activateFunctions[6] = showHistAll;
+    activateFunctions[1] = showCountriesTitle;
+    activateFunctions[2] = showChinaBookings;
+    activateFunctions[3] = showAñoNuevoChino;
+    activateFunctions[4] = showDiaTrabajador;
+    activateFunctions[5] = showVerano;
+    activateFunctions[6] = showMedioOtoño;
 
     for (var i = 0; i < 9; i++) {
       updateFunctions[i] = function () {};
     }
 
-    updateFunctions[7] = updateCough;
+    ///updateFunctions[2] = highlightBars;
+    ///updateFunctions[7] = updateChina;
   };
 
-  function updateCough(progress) {
-    gWords.selectAll('.cough').transition().duration(0).attr('opacity', progress);
+  function addTextAboveWeek(text, posX, posY) {
+    const x = d3
+      .scaleBand()
+      .domain(chinaData.map((d) => d.week))
+      .range([0, 500])
+      .padding(0.1);
 
-    gWords
-      .selectAll('.hist')
-      .transition('cough')
-      .duration(0)
-      .style('fill', function (d) {
-        return d.x0 >= 14 ? coughColorScale(progress) : '#008080';
-      });
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(chinaData, (d) => d.arrivals)])
+      .nice()
+      .range([height, 0]);
+
+    // Filter the data to find the specific week
+
+    console.log('TERT', text);
+
+    // Append the text above the specified week's bar
+    g.append('text')
+      .attr('class', 'bar-text')
+      .attr('x', posX)
+      .attr('y', posY) // Position the text slightly above the bar
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '12px')
+      .attr('fill', 'black') // Change color as needed
+      .transition()
+      .duration(4000)
+      .attr('opacity', 1)
+      .text(text);
+  }
+
+  function highlightBars(weeks) {
+    console.log('Highlight bars');
+
+    g.selectAll('.bar')
+      .filter((d) => {
+        return weeks.includes(+d.week);
+      })
+      .transition()
+      .duration(4000)
+      .attr('width', 6)
+      .style('fill', 'red')
+      .attr('opacity', 1);
   }
 
   function showTitle() {
-    hideAllElements();
+    showSection('section1');
 
-    gWords
-      .append('text')
-      .attr('class', 'title openvis-title')
+    g.append('text')
+      .attr('class', 'current section1')
       .attr('x', width / 2)
       .attr('y', height / 3)
       .attr('font-size', 50)
       .attr('text-anchor', 'middle')
-      .text('Weekly Arrivals Data');
+      .text('Llegadas semanales');
 
-    gWords
-      .append('text')
-      .attr('class', 'sub-title openvis-title')
+    g.append('text')
+      .attr('class', 'current section1')
       .attr('x', width / 2)
       .attr('y', height / 3 + height / 5)
       .attr('font-size', 30)
       .attr('text-anchor', 'middle')
 
-      .text('Analyzing trends over weeks');
+      .text('Analizando las tendencias vacacionales');
 
-    gWords.selectAll('.openvis-title').transition().duration(transitionTime).attr('opacity', 1);
+    fadeIn('.section1');
   }
 
-  function showFillerTitle() {
-    hideAllElements();
+  function showCountriesTitle() {
+    showSection('section2');
 
-    gWords
-      .append('text')
-      .attr('class', 'title count-title highlight')
+    g.append('text')
+      .attr('class', 'section2')
       .attr('x', width / 2)
       .attr('y', height / 3)
       .attr('font-size', 50)
@@ -114,158 +145,97 @@ var scrollVis = function () {
       .attr('font-weight', 'bold')
       .text('5');
 
-    gWords
-      .append('text')
-      .attr('class', 'sub-title count-title')
+    g.append('text')
+      .attr('class', 'section2')
       .attr('x', width / 2)
       .attr('y', height / 3 + height / 5)
       .attr('font-size', 30)
       .attr('text-anchor', 'middle')
       .text('Países');
 
-    gWords.selectAll('.count-title').transition().duration(transitionTime).attr('opacity', 1.0);
+    fadeIn('.section2');
   }
 
-  function showBookings() {
-    hideAllElements();
-    console.log('Show bookings hist', weekData);
+  function fadeIn(section) {
+    g.selectAll(section).transition().duration(transitionTime).attr('opacity', 1.0);
+  }
+
+  function showChinaBookings() {
+    showSection('section3');
 
     const x = d3
       .scaleBand()
-      .domain(weekData.map((d) => d.week))
+      .domain(chinaData.map((d) => d.week))
       .range([0, 500])
       .padding(0.1);
 
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(weekData, (d) => d.arrivals)])
+      .domain([0, d3.max(chinaData, (d) => d.arrivals)])
       .nice()
       .range([height, 0]);
 
-    console.log('Y', y(), weekData[0], height);
-
     // Append bars
-    gWords
-      .selectAll('.bar')
-      .data(weekData)
+    g.selectAll('.bar')
+      .data(chinaData)
       .enter()
       .append('rect')
-      .attr('class', 'bar')
+      .attr('class', 'bar section3')
       .attr('x', (d) => x(d.week))
       .attr('y', (d) => y(d.arrivals))
-      .attr('width', 0)
+      .attr('width', 6)
       .attr('height', (d) => height - y(d.arrivals));
 
-    gWords
-      .append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x))
-      .append('text')
-      .attr('y', 35)
-      .attr('x', width / 2)
-      .attr('dy', '.71em')
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'black')
+    const xAxis = g.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x)).attr('class', 'section3');
+
+    const yAxis = g.append('g').call(d3.axisLeft(y)).attr('class', 'section3');
+
+    xAxis
+      .selectAll('text')
       .attr('transform', 'rotate(-45)')
-      .text('Week');
+      .style('text-anchor', 'end')
+      .attr('dx', '-0.8em')
+      .attr('dy', '0.15em')
+      .attr('class', 'section3');
 
-    gWords
-      .append('g')
-      .call(d3.axisLeft(y))
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', -35)
-      .attr('x', -height / 2)
-      .attr('dy', '.71em')
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'black')
-      .text('Arrivals');
-
-    showBars();
+    fadeIn('.section3');
   }
 
-  function showHistAll() {
-    // ensure the axis to histogram one
-    //showAxis(xAxisHist);
-
-    gWords.selectAll('.cough').transition().duration(0).attr('opacity', 0);
-
-    // named transition to ensure
-    // color change is not clobbered
-    gWords.selectAll('.hist').transition('color').duration(500).style('fill', '#008080');
-
-    gWords
-      .selectAll('.hist')
-      .transition()
-      .duration(1200)
-      .attr('y', function (d) {
-        return yHistScale(d.length);
-      })
-      .attr('height', function (d) {
-        return height - yHistScale(d.length);
-      })
-      .style('opacity', 1.0);
+  function showAñoNuevoChino() {
+    highlightBars([12, 13]);
+    addTextAboveWeek('Año nuevo Chino', 115, 280);
   }
 
-  function showCough() {
-    // ensure the axis to histogram one
-    //showAxis(xAxisHist);
-
-    gWords
-      .selectAll('.hist')
-      .transition()
-      .duration(transitionTime)
-      .attr('y', function (d) {
-        return yHistScale(d.length);
-      })
-      .attr('height', function (d) {
-        return height - yHistScale(d.length);
-      })
-      .style('opacity', 1.0);
+  function showDiaTrabajador() {
+    highlightBars([21, 22]);
+    addTextAboveWeek('Día del trabajador', 200, 0);
   }
 
-  function hideAllElements() {
-    // Selects and hides all SVG elements, assuming they may have been created.
-    gWords.selectAll('*').style('display', 'none');
+  function showVerano() {
+    highlightBars([27, 28, 29, 30, 31, 32]);
+    addTextAboveWeek('Vacaciones de verano', 277, 45);
   }
 
-  function hideBars() {
-    gWords.selectAll('.bar-text').transition().duration(0).attr('opacity', 0);
-    gWords.selectAll('.bar').transition().duration(transitionTime).attr('width', 0);
+  function showMedioOtoño() {
+    highlightBars([39]);
+    addTextAboveWeek('Festival de Medio Otoño', 380, 90);
   }
 
-  function showBars() {
-    gWords.selectAll('.bar-text').transition().duration(0).attr('opacity', 1);
-    gWords.selectAll('.bar').transition().duration(transitionTime).attr('width', 6);
-  }
+  function showSection(selector) {
+    const select = `:not(.${selector})`;
 
-  function showHistPart() {
-    console.log('SHOW HIST PART');
-
-    // here we only show a bar if
-    // it is before the 15 minute mark
-    gWords
-      .selectAll('.hist')
-      .transition()
-      .duration(transitionTime)
-      .attr('y', function (d) {
-        return d.x0 < 15 ? yHistScale(d.length) : height;
-      })
-      .attr('height', function (d) {
-        return d.x0 < 15 ? height - yHistScale(d.length) : 0;
-      })
-      .style('opacity', function (d) {
-        return d.x0 < 15 ? 1.0 : 1e-6;
-      });
+    g.selectAll(select).remove();
   }
 
   chart.activate = function (index) {
     activeIndex = index;
     var sign = activeIndex - lastIndex < 0 ? -1 : 1;
     var scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
+
     scrolledSections.forEach(function (i) {
       activateFunctions[i]();
     });
+
     lastIndex = activeIndex;
   };
 
@@ -276,10 +246,10 @@ var scrollVis = function () {
   return chart;
 };
 
-function display(hotelData, wordsData) {
+function display(hotelData) {
   var plot = scrollVis();
 
-  d3.select('#vis').datum([wordsData, hotelData]).call(plot);
+  d3.select('#vis').datum([hotelData]).call(plot);
 
   var scroll = scroller().container(d3.select('#graphic'));
 
@@ -298,8 +268,6 @@ function display(hotelData, wordsData) {
   });
 }
 
-d3.tsv('./data/words.tsv', function (error1, wordsData) {
-  d3.csv('./data/hotel_bookings.csv', function (error2, hotelData) {
-    display(hotelData, wordsData);
-  });
+d3.csv('./data/hotel_bookings.csv', function (error2, hotelData) {
+  display(hotelData);
 });
