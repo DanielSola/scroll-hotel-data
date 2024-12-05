@@ -1,13 +1,8 @@
-## D3 Scrollytelling Demo
+## PEC 3: Visualización de datos.
 
-Example code of how you might make a basic scrollytelling site using [D3](https://d3js.org/).
-
-[Demo Here](http://vallandingham.me/scroll_demo/).
-
-This code has been **updated to use D3v4**.
-
-If you are looking for the old D3v3 code, check out the [old-d3v3 branch](https://github.com/vlandham/scroll_demo/tree/old-d3v3) of this repository.
-
-Originally, this code was part of a talk given at [OpenVis Conf](http://openvisconf.com/) about scrollytelling.
-
-[Check out the talk and additional materials!](http://vallandingham.me/think_you_can_scroll.html)
+Para ejecutar esta visualización:
+* Descargar este repositorio: `git clone https://github.com/DanielSola/scroll-hotel-data.git` 
+* Ejecutar comando `http-server` 
+* Abrir navegador -> [servidor local.](http://127.0.0.1:8080/)
+  * En caso de que no funcione, instalar `http-server` en local con el comando `npm i -g http-server`
+  * Para instalar node y npm, seguir la guía oficial https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
