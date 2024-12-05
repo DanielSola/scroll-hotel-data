@@ -79,8 +79,6 @@ var scrollVis = function () {
 
     // Filter the data to find the specific week
 
-    console.log('TERT', text);
-
     // Append the text above the specified week's bar
     g.append('text')
       .attr('class', 'bar-text')
@@ -96,8 +94,6 @@ var scrollVis = function () {
   }
 
   function highlightBars(weeks) {
-    console.log('Highlight bars');
-
     g.selectAll('.bar')
       .filter((d) => {
         return weeks.includes(+d.week);
@@ -118,7 +114,7 @@ var scrollVis = function () {
       .attr('y', height / 3)
       .attr('font-size', 50)
       .attr('text-anchor', 'middle')
-      .text('Llegadas semanales');
+      .text('Periodos vacacionales');
 
     g.append('text')
       .attr('class', 'current section1')
@@ -126,8 +122,7 @@ var scrollVis = function () {
       .attr('y', height / 3 + height / 5)
       .attr('font-size', 30)
       .attr('text-anchor', 'middle')
-
-      .text('Analizando las tendencias vacacionales');
+      .text('🇨🇳 ¿Cuándo se viaja en China? 🇨🇳');
 
     fadeIn('.section1');
   }
@@ -143,7 +138,7 @@ var scrollVis = function () {
       .attr('text-anchor', 'middle')
       .attr('fill', '#008080')
       .attr('font-weight', 'bold')
-      .text('5');
+      .text('4');
 
     g.append('text')
       .attr('class', 'section2')
@@ -151,7 +146,7 @@ var scrollVis = function () {
       .attr('y', height / 3 + height / 5)
       .attr('font-size', 30)
       .attr('text-anchor', 'middle')
-      .text('Países');
+      .text('Periodos vacacionales');
 
     fadeIn('.section2');
   }
@@ -198,25 +193,49 @@ var scrollVis = function () {
       .attr('dy', '0.15em')
       .attr('class', 'section3');
 
+    // Title for X-Axis
+    g.append('text')
+      .attr('class', 'axis-title')
+      .attr('x', width / 2)
+      .attr('y', height + margin.bottom) // Adjust for proper alignment
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '16px')
+      .text('Semana del año');
+
+    // Title for Y-Axis
+    g.append('text')
+      .attr('class', 'axis-title')
+      .attr('x', -height / 2)
+      .attr('y', -30) // Adjust for proper alignment
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '16px')
+      .attr('transform', 'rotate(-90)')
+      .text('Reservas hoteleras');
+
     fadeIn('.section3');
   }
 
   function showAñoNuevoChino() {
+    window.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { img: 'fadeImageAñoNuevoChino' } }));
     highlightBars([12, 13]);
     addTextAboveWeek('Año nuevo Chino', 115, 280);
   }
 
   function showDiaTrabajador() {
+    window.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { img: 'fadeImageDiaTrabajador' } }));
+
     highlightBars([21, 22]);
     addTextAboveWeek('Día del trabajador', 200, 0);
   }
 
   function showVerano() {
+    window.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { img: 'fadeImageVerano' } }));
     highlightBars([27, 28, 29, 30, 31, 32]);
     addTextAboveWeek('Vacaciones de verano', 277, 45);
   }
 
   function showMedioOtoño() {
+    window.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { img: 'fadeImageOtoño' } }));
     highlightBars([39]);
     addTextAboveWeek('Festival de Medio Otoño', 380, 90);
   }

@@ -1,4 +1,3 @@
-
 /**
  * scroller - handles the details
  * of figuring out which section
@@ -39,9 +38,7 @@ function scroller() {
     // when window is scrolled call
     // position. When it is resized
     // call resize.
-    d3.select(window)
-      .on('scroll.scroller', position)
-      .on('resize.scroller', resize);
+    d3.select(window).on('scroll.scroller', position).on('resize.scroller', resize);
 
     // manually call resize
     // initially to setup
@@ -108,14 +105,6 @@ function scroller() {
     dispatch.call('progress', this, currentIndex, progress);
   }
 
-  /**
-   * container - get/set the parent element
-   * of the sections. Useful for if the
-   * scrolling doesn't start at the very top
-   * of the page.
-   *
-   * @param value - the new container value
-   */
   scroll.container = function (value) {
     if (arguments.length === 0) {
       return container;

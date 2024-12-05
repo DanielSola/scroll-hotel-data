@@ -10,71 +10,67 @@
       <div id="graphic">
         <div id="sections">
           <section class="step">
-            <div class="title">Patrones Vacacionales</div>
-            Análisis de los periodos vacacionales por país<br /><br />¿Cuándo viajan los habitantes de cada país?
+            <div class="title">Vacaciones en China</div>
+            Análisis de los periodos vacacionales<br /><br />¿Cuándo viajan los habitantes de China?
           </section>
           <section class="step">
-            <div class="title">Países</div>
-            Estudiaremos como se viaja según cada país:
-            <ul>
-              <li>China</li>
-              <li>España</li>
-              <li>Estados Unidos</li>
-            </ul>
+            <div class="title">Periodos</div>
+            A partir de datos de reservas hoteleras en Europa, se observan cuatro importantes periodos de vacaciones en china, repartidos a lo largo
+            del año.
           </section>
           <section class="step">
-            <div class="title">China 🇨🇳</div>
-            Así viajan los chinos
+            <div class="title">Reservas hoteleras 🇨🇳</div>
+            En la figura de la derecha, vemos las llegadas de turistas chinos a dos hoteles en Portugal durante el año 2015.
           </section>
           <section id="section4" class="step">
             <div class="title">Año nuevo Chino 🇨🇳</div>
-            En febrero
+            El primer pico se corresponde con el Año Nuevo Chino. También conocido como Festival de Primavera, es la celebración más importante en
+            China. Marca el inicio del año según el calendario lunar y normalmente cae entre enero y febrero. Es un tiempo para reuniones familiares,
+            grandes banquetes, y espectaculares fuegos artificiales para ahuyentar la mala suerte y dar la bienvenida a la prosperidad.
 
             <div id="chinese-new-year-image">
-              <img id="fadeImage" src="./assets/china.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
+              <img id="fadeImageAñoNuevoChino" src="./assets/china.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
             </div>
-            <video id="chinese-new-year-video" width="320" height="240" controls>
-              <source src="./assets/chinese_new_years_video.mov" />
-            </video>
           </section>
-
 
           <section id="section4" class="step">
             <div class="title">Dia del trabajador 🇨🇳</div>
-            1-3 de Mayo
+            En Mayo, se celebra el día del trabajador. Es un feriado nacional que honra las contribuciones de los trabajadores al desarrollo del país.
+            Durante esta fecha, muchos chinos aprovechan para viajar, tanto dentro del país como internacionalmente, lo que convierte este período en
+            una de las temporadas de turismo más concurridas del año.
 
             <div id="chinese-new-year-image">
-              <img id="fadeImage" src="./assets/dia_trabajador.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
+              <img
+                id="fadeImageDiaTrabajador"
+                src="./assets/dia_trabajador.png"
+                alt="Chinese New Year Celebration"
+                style="max-width: 100%; height: auto"
+              />
             </div>
-
-            <video id="chinese-new-year-video" width="320" height="240" controls>
-              <source src="./assets/chinese_new_years_video.mov" />
-            </video>
           </section>
 
           <section id="section4" class="step">
             <div class="title">Vacaciones de verano 🇨🇳</div>
-            Junio - Julio
+
+            Durante julio y agosto, suceden las vacaciones de verano en China. Son el período más largo de descanso para estudiantes y profesores
+            Muchas familias aprovechan esta época para viajar internacionalmente, ya que coincide con el clima cálido y días largos. A partir del
+            gráfico de reservos de hotel, vemos que es un periódo en que muchos chinos vienen a visitar Europa
 
             <div id="chinese-new-year-image">
-              <img id="fadeImage" src="./assets/dia_trabajador.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
+              <img id="fadeImageVerano" src="./assets/verano.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
             </div>
-
-            <video id="chinese-new-year-video" width="320" height="240" controls>
-              <source src="./assets/chinese_new_years_video.mov" />
-            </video>
           </section>
           <section id="section4" class="step">
             <div class="title">Festival de Medio Otoño 🇨🇳</div>
-            Junio - Julio
+
+            El decimoquinto día del octavo mes lunar se celebra el Festival de Medio Otoño, lo cuál suele ser en septiembre o en octubre. Es una de
+            las festividades tradicionales más importantes en China. Las familias disfrutan de dulces tradicionales, encienden linternas y rinden
+            homenaje a la luna llena, símbolo de plenitud y unidad. Debido que es un periodo no laboral, también se produce un pico de viajes
+            internacionales.
 
             <div id="chinese-new-year-image">
-              <img id="fadeImage" src="./assets/dia_trabajador.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
+              <img id="fadeImageOtoño" src="./assets/otoño.png" alt="Chinese New Year Celebration" style="max-width: 100%; height: auto" />
             </div>
-
-            <video id="chinese-new-year-video" width="320" height="240" controls>
-              <source src="./assets/chinese_new_years_video.mov" />
-            </video>
           </section>
         </div>
         <div id="vis"></div>
@@ -86,9 +82,9 @@
     <script src="js/scroller.js"></script>
     <script src="js/sections.js"></script>
     <script>
-      window.addEventListener('load', () => {
+      window.addEventListener('myCustomEvent', (event) => {
         setTimeout(() => {
-          document.getElementById('fadeImage').classList.add('visible');
+          document.getElementById(event.detail.img).classList.add('visible');
         }, 4000);
       });
     </script>
